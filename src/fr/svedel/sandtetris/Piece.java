@@ -1,6 +1,7 @@
 package fr.svedel.sandtetris;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 
 public class Piece {
 	public static final int CUBE_N_ROW = 8;
@@ -18,44 +19,120 @@ public class Piece {
 	private int rotation = 0;
 	private Grain[][][] states;
 	
+	private boolean rotatePressed = false;
+	private boolean leftPressed = false;
+	private boolean rightPressed = false;
+	
 	public Piece(Grain[][][] states, Grid grid) {
 		this.grid = grid;
 		this.states = states;
+		ix = grid.getNCol()/2-PIECE_N_COL/2;
+		iy = -PIECE_N_ROW-CUBE_N_ROW;
 	}
 	
-	public Piece(int[][][] preStates, int color, Grid grid) {
-		this(generateStates(preStates, color, grid), grid);
+	public Piece(PreStates preStates, int color, Grid grid) {
+		this(preStates.generateStates(color, grid), grid);
 	}
 	
-	private static Grain[][][] generateStates(int [][][] preStates,
-											  int color, Grid grid) {
-		Color displayColor;
-		switch (color) {
-		case Grain.BLUE:
-			displayColor = Color.BLUE;
-		case Grain.RED:
-			displayColor = Color.RED;
-		case Grain.GREEN:
-			displayColor = Color.GREEN;
-		case Grain.YELLOW:
-			displayColor = Color.YELLOW;
-		default:
-			displayColor = Color.GRAY;
+	public int getIx() {
+		return ix;
+	}
+	
+	public int getIy() {
+		return iy;
+	}
+	
+	public Grain[][] getState() {
+		return states[rotation];
+	}
+	
+	public void pressRotate() {
+		rotatePressed = true;
+	}
+	
+	public void pressLeft() {
+		leftPressed = true;
+	}
+	
+	public void unpressLeft() {
+		leftPressed = false;
+	}
+	
+	public void pressRight() {
+		rightPressed = true;
+	}
+	
+	public void unpressRight() {
+		rightPressed = false;
+	}
+	
+	public boolean move() {
+		if (rotatePressed) {
+			int rot = (rotation+1)%states.length;
+			if (isPosOk(rot)) {
+				rotation = rot;
+			}
+			rotatePressed = false;
+		}
+		if (leftPressed) {
+			int newIx = ix-1;
+			if (isPosOk(newIx, iy)) {
+				ix = newIx;
+			}
+		}
+		if (rightPressed) {
+			int newIx = ix+1;
+			if (isPosOk(newIx, iy)) {
+				ix = newIx;
+			}
 		}
 		
-		Grain[][][] states = new Grain[4][PIECE_N_ROW][PIECE_N_COL];
-		for (int ir = 0; ir < states.length; ++ir) {
-			for (int iy = 0; iy < states[ir].length; ++iy) {
-				for (int ix = 0; ix < states[ir][iy].length; ++ix) {
-					int ix2 = ix/CUBE_N_COL;
-					int iy2 = iy/CUBE_N_ROW;
-					if (preStates[ir][iy2][ix2] == 1) {
-						states[ir][iy][ix] = new Grain(color, displayColor, grid);
+		// go down
+		if (isPosOk(ix, iy+1)) {
+			iy += 1;
+		} else {
+			grid.putPiece(this);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isPosOk(int rotation) {
+		return isPosOk(rotation, ix, iy);
+	}
+	
+	private boolean isPosOk(int ix, int iy) {
+		return isPosOk(rotation, ix, iy);
+	}
+	
+	private boolean isPosOk(int rotation, int ix, int iy) {
+		for (int iy2 = 0; iy2 < states[rotation].length; ++iy2) {
+			for (int ix2 = 0; ix2 < states[rotation][iy2].length; ++ix2) {
+				// the coords of this grain at this pos
+				int gix = ix+ix2;
+				int giy = iy+iy2;
+				if (states[rotation][iy2][ix2] != null) {
+					if (giy >= grid.getNRow() || gix < 0 || gix >= grid.getNCol()) {
+						return false;
+					} else if (giy >= 0) {
+						if (!grid.isEmpty(gix, giy)) return false;
 					}
 				}
 			}
 		}
-		
-		return states;
+		return true;
+	}
+	
+	public void display(Graphics2D g2d) {
+		for (int iy2 = 0; iy2 < states[rotation].length; ++iy2) {
+			for (int ix2 = 0; ix2 < states[rotation][iy2].length; ++ix2) {
+				// the coords of this grain at this pos
+				int gix = ix+ix2;
+				int giy = iy+iy2;
+				if (states[rotation][iy2][ix2] != null) {
+					states[rotation][iy2][ix2].display(gix, giy, g2d);
+				}
+			}
+		}
 	}
 }

@@ -14,6 +14,7 @@ public class Grain {
 	public static final int RED = 1;
 	public static final int GREEN = 2;
 	public static final int YELLOW = 3;
+	public static final int NUM_COLORS = 4;
 	
 	private int color;
 	private Color displayColor;
@@ -22,6 +23,10 @@ public class Grain {
 		this.grid = grid;
 		this.color = color;
 		this.displayColor = displayColor;
+	}
+	
+	public int getColor() {
+		return color;
 	}
 	
 	public int[] update(int ix, int iy) {
@@ -35,7 +40,7 @@ public class Grain {
 				return new int[] {newX, iy+1};
 			} else if (!grid.isVoid(ix-1, iy+1) && grid.isEmpty(ix-1, iy+1)) {
 				return new int[] {ix-1, iy+1};
-			} else if (!grid.isVoid(ix-1, iy-1) && grid.isEmpty(ix+1, iy+1)) {
+			} else if (!grid.isVoid(ix+1, iy+1) && grid.isEmpty(ix+1, iy+1)) {
 				return new int[] {ix+1, iy+1};
 			}
 		}

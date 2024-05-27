@@ -47,6 +47,8 @@ public class PlayPainter extends JPanel{
 		int gridW = grid.getWidth();
 		int gridH = grid.getHeight();
 		
+		Piece piece0 = play.getPiece0();
+		
 		scale = getHeight()/(double)heightForNoScale;
 		
 		transX = getWidth()/2-gridW/2*scale;
@@ -56,6 +58,7 @@ public class PlayPainter extends JPanel{
 												   BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2dgrid = gridImg.createGraphics();
 		grid.display(g2dgrid);
+		piece0.display(g2dgrid);
 		
 		g2d.drawImage(gridImg, (int)transX, (int)transY,
 					  (int)(gridW*scale), (int)(gridH*scale), null);
