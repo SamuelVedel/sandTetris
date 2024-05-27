@@ -40,6 +40,9 @@ public class Play {
 				case KeyEvent.VK_DOWN:
 					piece.pressDown();
 					break;
+				case KeyEvent.VK_SPACE:
+					piece.pressFall();
+					break;
 				}
 			}
 			
