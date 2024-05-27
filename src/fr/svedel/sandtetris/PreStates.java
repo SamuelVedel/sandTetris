@@ -193,11 +193,11 @@ public enum PreStates {
 			}
 		});
 	
-	private static final int NORMAL = 0;
-	private static final int RANDOM_MOTIF = 1;
-	private static final int CHECKERBOARD_MOTIF = 2;
-	private static final int MINI_SQUARE_MOTIF = 3;
-	private static final int NUM_MOTIF = 4;
+	private static final int RANDOM_MOTIF = 0;
+	private static final int CHECKERBOARD_MOTIF = 1;
+	private static final int MINI_SQUARE_MOTIF = 2;
+	private static final int NORMAL = 3;
+	private static final int NUM_MOTIF = 3;
 	
 	private int[][][] pstates;
 	
