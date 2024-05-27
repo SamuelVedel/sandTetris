@@ -35,6 +35,10 @@ public class Play {
 				case KeyEvent.VK_RIGHT:
 					piece0.pressRight();
 					break;
+				case KeyEvent.VK_S:
+				case KeyEvent.VK_DOWN:
+					piece0.pressDown();
+					break;
 				}
 			}
 			

@@ -22,6 +22,7 @@ public class Piece {
 	private boolean rotatePressed = false;
 	private boolean leftPressed = false;
 	private boolean rightPressed = false;
+	private boolean downPressed = false;
 	
 	public Piece(Grain[][][] states, Grid grid) {
 		this.grid = grid;
@@ -66,6 +67,10 @@ public class Piece {
 		rightPressed = false;
 	}
 	
+	public void pressDown() {
+		downPressed = true;
+	}
+	
 	public boolean move() {
 		if (rotatePressed) {
 			int rot = (rotation+1)%states.length;
@@ -85,6 +90,13 @@ public class Piece {
 			if (isPosOk(newIx, iy)) {
 				ix = newIx;
 			}
+		}
+		if (downPressed) {
+			int newIy = iy+Piece.CUBE_N_ROW;
+			if (isPosOk(ix, newIy)) {
+				iy = newIy;
+			}
+			downPressed = false;
 		}
 		
 		// go down
