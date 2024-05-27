@@ -19,6 +19,8 @@ public class Piece {
 	public static final int WIDTH = PIECE_N_COL*Grain.WIDTH;
 	public static final int HEIGHT = PIECE_N_ROW*Grain.HEIGHT;
 	
+	public static final int VY = 2;
+	
 	private Grid grid;
 	
 	private int ix, iy;
@@ -91,16 +93,18 @@ public class Piece {
 			rotatePressed = false;
 		}
 		if (leftPressed) {
-			int newIx = ix-1;
-			if (isPosOk(newIx, iy)) {
-				ix = newIx;
+			int newIx;
+			for (newIx = ix-VY; newIx < ix; newIx++) {
+				if (isPosOk(newIx, iy)) break;
 			}
+			ix = newIx;
 		}
 		if (rightPressed) {
-			int newIx = ix+1;
-			if (isPosOk(newIx, iy)) {
-				ix = newIx;
+			int newIx;
+			for (newIx = ix+VY; newIx > ix; newIx--) {
+				if (isPosOk(newIx, iy)) break;
 			}
+			ix = newIx;
 		}
 		if (downPressed) {
 			int newIy = iy+Piece.CUBE_N_ROW;
