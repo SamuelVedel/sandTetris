@@ -127,10 +127,14 @@ public class Grid {
 			return false;
 		}
 		boolean crosses = false;
-		crosses = getConnexComponent(ix-1, iy, color, connexComponent) || crosses;
-		crosses = getConnexComponent(ix, iy-1, color, connexComponent) || crosses;
-		crosses = getConnexComponent(ix+1, iy, color, connexComponent) || crosses;
-		crosses = getConnexComponent(ix, iy+1, color, connexComponent) || crosses;
+		for (int iy2 = iy-1; iy2 <= iy+1; ++iy2) {
+			for (int ix2 = ix-1; ix2 <= ix+1; ++ix2) {
+				if (ix != ix2 || iy != iy2) {
+					crosses = getConnexComponent(ix2, iy2, color, connexComponent)
+						|| crosses;
+				}
+			}
+		}
 		return crosses || ix == nCol-1;
 	}
 	
