@@ -13,6 +13,12 @@ public class Piece {
 	public static final int PIECE_N_ROW = N_CUBES_IN_WIDTH*CUBE_N_ROW;
 	public static final int PIECE_N_COL= N_CUBES_IN_HEIGHT*CUBE_N_COL;
 	
+	public static final int CUBE_WIDTH = CUBE_N_COL*Grain.WIDTH;
+	public static final int CUBE_HEIGHT = CUBE_N_ROW*Grain.HEIGHT;
+	
+	public static final int WIDTH = PIECE_N_COL*Grain.WIDTH;
+	public static final int HEIGHT = PIECE_N_ROW*Grain.HEIGHT;
+	
 	private Grid grid;
 	
 	private int ix, iy;
@@ -136,13 +142,18 @@ public class Piece {
 	}
 	
 	public void display(Graphics2D g2d) {
+		display(ix*Grain.WIDTH, iy*Grain.HEIGHT, g2d);
+	}
+	
+	public void display(int x, int y, Graphics2D g2d) {
 		for (int iy2 = 0; iy2 < states[rotation].length; ++iy2) {
 			for (int ix2 = 0; ix2 < states[rotation][iy2].length; ++ix2) {
 				// the coords of this grain at this pos
-				int gix = ix+ix2;
-				int giy = iy+iy2;
+				//int gix = ix+ix2;
+				//int giy = iy+iy2;
 				if (states[rotation][iy2][ix2] != null) {
-					states[rotation][iy2][ix2].display(gix, giy, g2d);
+					states[rotation][iy2][ix2].display(x/Grain.WIDTH+ix2,
+													   y/Grain.HEIGHT+iy2, g2d);
 				}
 			}
 		}

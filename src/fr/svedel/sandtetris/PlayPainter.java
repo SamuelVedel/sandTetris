@@ -40,27 +40,40 @@ public class PlayPainter extends JPanel{
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		
-		g2d.setColor(Color.DARK_GRAY.darker().darker());
-		g2d.fillRect(0, 0, getWidth(), getHeight());
-		
 		Grid grid = play.getGrid();
 		int gridW = grid.getWidth();
 		int gridH = grid.getHeight();
 		
-		Piece piece0 = play.getPiece0();
+		Piece piece = play.getPiece();
+		Piece nextPiece = play.getNextPiece();
+		int pieceW = Piece.WIDTH;
+		int pieceH = Piece.HEIGHT;
+		int cubeW = Piece.CUBE_WIDTH;
+		int cubeH = Piece.CUBE_HEIGHT;
 		
 		scale = getHeight()/(double)heightForNoScale;
 		
 		transX = getWidth()/2-gridW/2*scale;
 		transY = getHeight()/2-gridH/2*scale;
 		
-		BufferedImage gridImg = new BufferedImage(gridW, gridH,
+		BufferedImage gridImg = new BufferedImage((int)(getWidth()/scale),
+												  (int)(getHeight()/scale),
 												   BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2dgrid = gridImg.createGraphics();
+		g2dgrid.setColor(Color.DARK_GRAY.darker().darker());
+		g2dgrid.fillRect(0, 0, gridImg.getWidth(), gridImg.getHeight());
+		g2dgrid.translate(transX/scale, transY/scale);
 		grid.display(g2dgrid);
-		piece0.display(g2dgrid);
+		piece.display(g2dgrid);
 		
-		g2d.drawImage(gridImg, (int)transX, (int)transY,
-					  (int)(gridW*scale), (int)(gridH*scale), null);
+		int nextPieceX = gridW+2*cubeW;
+		int nextPieceY = 4*cubeH;
+		g2dgrid.setColor(Color.DARK_GRAY.darker());
+		g2dgrid.fillRect(nextPieceX, nextPieceY,
+						 pieceW, pieceH);
+		nextPiece.display(nextPieceX, nextPieceY, g2dgrid);
+		
+		g2d.drawImage(gridImg, 0, 0,
+					  getWidth(), getHeight(), null);
 	}
 }

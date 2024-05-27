@@ -13,7 +13,8 @@ public class Play {
 	private PlayPainter playP = new PlayPainter(this);
 	
 	private Grid grid = new Grid();
-	private Piece piece0;
+	private Piece piece;
+	private Piece nextPiece;
 	
 	private KeyListener kl = new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -25,19 +26,19 @@ public class Play {
 				case KeyEvent.VK_ENTER:
 				case KeyEvent.VK_UP:
 				case KeyEvent.VK_Z:
-					piece0.pressRotate();
+					piece.pressRotate();
 					break;
 				case KeyEvent.VK_Q:
 				case KeyEvent.VK_LEFT:
-					piece0.pressLeft();
+					piece.pressLeft();
 					break;
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
-					piece0.pressRight();
+					piece.pressRight();
 					break;
 				case KeyEvent.VK_S:
 				case KeyEvent.VK_DOWN:
-					piece0.pressDown();
+					piece.pressDown();
 					break;
 				}
 			}
@@ -47,11 +48,11 @@ public class Play {
 				switch (keyCode) {
 				case KeyEvent.VK_Q:
 				case KeyEvent.VK_LEFT:
-					piece0.unpressLeft();
+					piece.unpressLeft();
 					break;
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
-					piece0.unpressRight();
+					piece.unpressRight();
 					break;
 				}
 			}
@@ -79,23 +80,29 @@ public class Play {
 	
 	private void initPiece() {
 		Random rand = new Random();
+		piece = nextPiece;
 		int iPStates = rand.nextInt(PreStates.values().length);
 		int iColor = rand.nextInt(Grain.NUM_COLORS);
-		piece0 = new Piece(PreStates.values()[iPStates], iColor, grid);
+		nextPiece = new Piece(PreStates.values()[iPStates], iColor, grid);
+		if (piece == null) initPiece();
 	}
 	
 	public Grid getGrid() {
 		return grid;
 	}
 	
-	public Piece getPiece0() {
-		return piece0;
+	public Piece getPiece() {
+		return piece;
+	}
+	
+	public Piece getNextPiece() {
+		return nextPiece;
 	}
 	
 	private void run() {
 		while (true) {
 			grid.update();
-			if (piece0.move()) {
+			if (piece.move()) {
 				initPiece();
 			}
 			vf.repaint();
