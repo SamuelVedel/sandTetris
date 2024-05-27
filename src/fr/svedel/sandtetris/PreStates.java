@@ -193,14 +193,55 @@ public enum PreStates {
 			}
 		});
 	
+	private static final int NORMAL = 0;
+	private static final int RANDOM_MOTIF = 1;
+	private static final int CHECKERBOARD_MOTIF = 2;
+	private static final int MINI_SQUARE_MOTIF = 3;
+	private static final int NUM_MOTIF = 4;
+	
 	private int[][][] pstates;
 	
 	PreStates(int[][][] pstates) {
 		this.pstates = pstates;
 	}
 	
+	private Color generateDispalyColor(int ix, int iy, Color displayColor, int motif) {
+		switch (motif) {
+		case NORMAL:
+			return displayColor;
+		case RANDOM_MOTIF:
+			Random rand = new Random();
+			int nDarker = rand.nextInt(2);
+			Color thisDisplayColor = displayColor;
+			for (int i = 0; i < nDarker; ++i) {
+				thisDisplayColor = thisDisplayColor.darker();
+			}
+			return thisDisplayColor;
+		case CHECKERBOARD_MOTIF:
+			if ((ix/(Piece.CUBE_N_COL/2)+iy/(Piece.CUBE_N_ROW/2))%2 == 0) {
+				return displayColor.darker();
+			} else {
+				return displayColor;
+			}
+		case MINI_SQUARE_MOTIF:
+			int ix2 = ix%Piece.CUBE_N_COL;
+			int iy2 = iy%Piece.CUBE_N_ROW;
+			if (((ix2 >= 2 && ix2 <= 5) && (iy2 == 2 || iy2 == 5))
+				|| ((ix2 == 2 || ix2 == 5) && (iy2 >= 2 && iy2 <= 5))
+				|| ix2 == 0 || iy2 == 0 || ix2 == Piece.CUBE_N_COL-1
+				|| iy2 == Piece.CUBE_N_ROW-1) {
+				return displayColor.darker();
+			} else {
+				return displayColor;
+			}
+		default:
+			return displayColor;
+		}
+	}
+	
 	public Grain[][][] generateStates(int color, Grid grid) {
 		Random rand = new Random();
+		int motif = rand.nextInt(NUM_MOTIF);
 		
 		Color displayColor;
 		switch (color) {
@@ -227,11 +268,8 @@ public enum PreStates {
 					int ix2 = ix/Piece.CUBE_N_COL;
 					int iy2 = iy/Piece.CUBE_N_ROW;
 					if (pstates[ir][iy2][ix2] == 1) {
-						int nDarker = rand.nextInt(2);
-						Color thisDisplayColor = displayColor;
-						for (int i = 0; i < nDarker; ++i) {
-							thisDisplayColor = thisDisplayColor.darker();
-						}
+						Color thisDisplayColor =
+							generateDispalyColor(ix, iy, displayColor, motif);
 						states[ir][iy][ix] = new Grain(color, thisDisplayColor, grid);
 					} else {
 						states[ir][iy][ix] = null;
