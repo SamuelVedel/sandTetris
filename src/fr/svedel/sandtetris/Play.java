@@ -23,7 +23,6 @@ public class Play {
 				case KeyEvent.VK_F11:
 					vf.toggleFullScreen();
 					break;
-				case KeyEvent.VK_ENTER:
 				case KeyEvent.VK_UP:
 				case KeyEvent.VK_Z:
 					piece.pressRotate();
@@ -40,6 +39,7 @@ public class Play {
 				case KeyEvent.VK_DOWN:
 					piece.pressDown();
 					break;
+				case KeyEvent.VK_ENTER:
 				case KeyEvent.VK_SPACE:
 					piece.pressFall();
 					break;
