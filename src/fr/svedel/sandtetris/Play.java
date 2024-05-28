@@ -87,7 +87,8 @@ public class Play {
 		Random rand = new Random();
 		piece = nextPiece;
 		int iPStates = rand.nextInt(PreStates.values().length);
-		int iColor = rand.nextInt(Grain.NUM_COLORS);
+		int iColor = rand.nextInt(Grain.NUM_COLORS-1);
+		if (rand.nextInt(50) == 0) iColor = Grain.GRAY;
 		nextPiece = new Piece(PreStates.values()[iPStates], iColor, grid);
 		if (piece == null) initPiece();
 	}

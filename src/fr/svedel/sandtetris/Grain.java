@@ -15,7 +15,8 @@ public class Grain {
 	public static final int GREEN = 2;
 	public static final int YELLOW = 3;
 	public static final int PURPLE = 4;
-	public static final int NUM_COLORS = 5;
+	public static final int GRAY = 5;
+	public static final int NUM_COLORS = 6;
 	
 	private int color;
 	private Color displayColor;
@@ -31,6 +32,9 @@ public class Grain {
 	}
 	
 	public int[] update(int ix, int iy) {
+		if (color == GRAY) {
+			return new int[] {ix, iy};
+		}
 		if (!grid.isVoid(ix, iy+1)) {
 			if (grid.isEmpty(ix, iy+1)) {
 				return new int[] {ix, iy+1};
