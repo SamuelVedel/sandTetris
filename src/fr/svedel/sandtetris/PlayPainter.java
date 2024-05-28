@@ -64,14 +64,14 @@ public class PlayPainter extends JPanel{
 		g2dgrid.fillRect(0, 0, gridImg.getWidth(), gridImg.getHeight());
 		g2dgrid.translate(transX/scale, transY/scale);
 		grid.display(g2dgrid);
-		piece.display(g2dgrid);
+		if (piece != null) piece.display(g2dgrid);
 		
 		int nextPieceX = gridW+2*cubeW;
 		int nextPieceY = 4*cubeH;
 		g2dgrid.setColor(Color.DARK_GRAY.darker());
 		g2dgrid.fillRect(nextPieceX, nextPieceY,
 						 pieceW, pieceH);
-		nextPiece.display(nextPieceX, nextPieceY, g2dgrid);
+		if (nextPiece != null) nextPiece.display(nextPieceX, nextPieceY, g2dgrid);
 		
 		g2d.drawImage(gridImg, 0, 0,
 					  getWidth(), getHeight(), null);
