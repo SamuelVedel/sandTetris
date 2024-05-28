@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Grid {
-	public int nRow = 20*Piece.CUBE_N_ROW;
-	public int nCol = 10*Piece.CUBE_N_COL;
+	private int nRow = 20*Piece.CUBE_N_ROW;
+	private int nCol = 10*Piece.CUBE_N_COL;
+	
+	private Play play;
 	
 	public Grain[][] grid;
 	
-	public Grid() {
+	public Grid(Play play) {
+		this.play = play;
 		grid = new Grain[nRow][nCol];
 	}
 	
@@ -96,6 +99,7 @@ public class Grid {
 				if (oldColor != color) {
 					ArrayList<Integer[]> connexComponent = new ArrayList<>();
 					if (getConnexComponent(0, iy, color, connexComponent)) {
+						play.increaseScore(connexComponent.size());
 						for (Integer[] coords: connexComponent) {
 							grid[coords[1]][coords[0]] = null;
 						}

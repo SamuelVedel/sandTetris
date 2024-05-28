@@ -10,9 +10,11 @@ public class Play {
 	private Toolkit toolkit = Toolkit.getDefaultToolkit();
 	private int fps = 60;
 	
+	private int score = 0;
+	
 	private PlayPainter playP = new PlayPainter(this);
 	
-	private Grid grid = new Grid();
+	private Grid grid = new Grid(this);
 	private Piece piece;
 	private Piece nextPiece;
 	
@@ -88,6 +90,14 @@ public class Play {
 		int iColor = rand.nextInt(Grain.NUM_COLORS);
 		nextPiece = new Piece(PreStates.values()[iPStates], iColor, grid);
 		if (piece == null) initPiece();
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public void increaseScore(int points) {
+		score += points;
 	}
 	
 	public Grid getGrid() {

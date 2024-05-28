@@ -1,8 +1,12 @@
 package fr.svedel.sandtetris;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -12,7 +16,7 @@ public class PlayPainter extends JPanel{
 	 * Gap between the top of the grid (or the bottom)
 	 * and the top of the screen (or the bottom)
 	 */
-	public static final int GRID_GAP = 100;
+	public static final int GRID_GAP = 2*Piece.CUBE_HEIGHT;
 	
 	private Play play;
 	
@@ -22,6 +26,47 @@ public class PlayPainter extends JPanel{
 	
 	public PlayPainter(Play play) {
 		this.play = play;
+	}
+	
+		/**
+	 * Retourne la largeur d'un texte
+	 * 
+	 * @param text texte en question
+	 * @param g2d <code>Graphics2D</code> qui sert à connaitre
+	 * le <code>Font</code> à étudier
+	 * @return la largeur du texte
+	 */
+	public static int getTextW(String text, Graphics2D g2d) {
+		FontMetrics fm = g2d.getFontMetrics();
+		Rectangle2D textBounds = fm.getStringBounds(text, g2d);
+		return (int) textBounds.getWidth();
+	}
+	
+	/**
+	 * <p>Retourne la hauteur d'un texte, mais à un décalge par
+	 * rapport à la réalité <br>
+	 * il faut avec la police Arial enlevé la taille de la police*20/50.</p>
+	 * 
+	 * <p>J'aimerais bien faire des test pour plein de police histoie de tout avoir
+	 * facilement</p>
+	 * 
+	 * @param text texte en question
+	 * @param g2d <code>Graphics2D</code> qui sert à connaitre
+	 * le <code>Font</code> à étudier
+	 * @return la hauteur du texte
+	 */
+	public static int getTextH(String text, Graphics2D g2d) {
+		FontMetrics fm = g2d.getFontMetrics();
+		Rectangle2D textBounds = fm.getStringBounds(text, g2d);
+		return (int) textBounds.getHeight()-g2d.getFont().getSize()*20/50;
+	}
+	
+	public static void drawString(String text, int x, int y, Graphics2D g2d) {
+		Graphics2D g2d2 = (Graphics2D) g2d.create();
+		g2d2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+							  RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d2.drawString(text, x, y);
+		g2d2.dispose();
 	}
 	
 	public double getTransX() {
@@ -72,6 +117,13 @@ public class PlayPainter extends JPanel{
 		g2dgrid.fillRect(nextPieceX, nextPieceY,
 						 pieceW, pieceH);
 		if (nextPiece != null) nextPiece.display(nextPieceX, nextPieceY, g2dgrid);
+		
+		String str = "Score: "+play.getScore();
+		g2dgrid.setFont(new Font("ARIAL", Font.BOLD, 50));
+		int strW = getTextW(str, g2dgrid);
+		int strH = getTextH(str, g2dgrid);
+		g2dgrid.setColor(Color.WHITE);
+		drawString(str, nextPieceX+pieceW/2-strW/2, nextPieceY-10-strH, g2dgrid);
 		
 		g2d.drawImage(gridImg, 0, 0,
 					  getWidth(), getHeight(), null);
