@@ -246,16 +246,20 @@ public enum PreStates {
 		Color displayColor;
 		switch (color) {
 		case Grain.BLUE:
-			displayColor = Color.BLUE.darker();
+			//displayColor = Color.BLUE.darker();
+			displayColor = new Color(93, 173, 226);
 			break;
 		case Grain.RED:
-			displayColor = Color.RED.darker();
+			//displayColor = Color.RED.darker();
+			displayColor = new Color(236, 112, 99);
 			break;
 		case Grain.GREEN:
-			displayColor = Color.GREEN.darker();
+			//displayColor = Color.GREEN.darker();
+			displayColor = new Color(46, 204, 113);
 			break;
 		case Grain.YELLOW:
-			displayColor = Color.YELLOW.darker();
+			//displayColor = Color.YELLOW.darker();
+			displayColor = new Color(243, 156, 18);
 			break;
 		case Grain.PURPLE:
 			displayColor = Color.decode("#710193");
