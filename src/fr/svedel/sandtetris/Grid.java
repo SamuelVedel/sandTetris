@@ -12,6 +12,7 @@ public class Grid {
 	private Play play;
 	
 	public Grain[][] grid;
+	public ArrayList<int[]> updatedCoords = new ArrayList<>();
 	
 	public Grid(Play play) {
 		this.play = play;
@@ -82,9 +83,11 @@ public class Grid {
 			for (int ix: ixArray) {
 				if (!isEmpty(ix, iy)) {
 					int[] newCoords = grid[iy][ix].update(ix, iy);
-					Grain gr = grid[iy][ix];
-					grid[iy][ix] = null;
-					grid[newCoords[1]][newCoords[0]] = gr;
+					if (!coordsEqual(newCoords, new int[] {ix, iy})) {
+						grid[newCoords[1]][newCoords[0]] = grid[iy][ix];
+						grid[iy][ix] = null;
+						updatedCoords.add(newCoords);
+					}
 				}
 			}
 		}
@@ -92,15 +95,15 @@ public class Grid {
 	}
 	
 	public void deletLines() {
-		int oldColor = -1;
+		/*int oldColor = -1;
 		for (int iy = 0; iy < nRow; ++iy) {
 			if (!isEmpty(0, iy))  {
 				int color = grid[iy][0].getColor();
 				if (oldColor != color) {
-					ArrayList<Integer[]> connexComponent = new ArrayList<>();
-					if (getConnexComponent(0, iy, color, connexComponent)) {
+					ArrayList<int[]> connexComponent = new ArrayList<>();
+					if (getConnexComponent(0, iy, color, connexComponent) == 3) {
 						play.increaseScore(connexComponent.size());
-						for (Integer[] coords: connexComponent) {
+						for (int[] coords: connexComponent) {
 							grid[coords[1]][coords[0]] = null;
 						}
 					}
@@ -109,10 +112,31 @@ public class Grid {
 			} else {
 				oldColor = -1;
 			}
+		}*/
+		
+		while (updatedCoords.size() > 0) {
+			int[] startCoords = updatedCoords.get(0);
+			int ix = startCoords[0];
+			int iy = startCoords[1];
+			int color = grid[iy][ix].getColor();
+			ArrayList<int[]> connexComponent = new ArrayList<>();
+			int result = getConnexComponent(ix, iy, color, connexComponent);
+			play.increaseScore(connexComponent.size());
+			for (int[] coords: connexComponent) {
+				if (result == 3) grid[coords[1]][coords[0]] = null;
+				int index = indexInAlOfCoords(updatedCoords, coords);
+				if (index >= 0) {
+					updatedCoords.remove(index);
+				}
+			}
 		}
 	}
 	
-	private int indexInAlOfCoords(ArrayList<Integer[]> al, int[] coords) {
+	private boolean coordsEqual(int[] coords1, int[] coords2) {
+		return coords1[0] == coords2[0] && coords1[1] == coords2[1];
+	}
+	
+	private int indexInAlOfCoords(ArrayList<int[]> al, int[] coords) {
 		for (int i = 0; i < al.size(); ++i) {
 			if (al.get(i)[0] == coords[0] && al.get(i)[1] == coords[1]) {
 				return i;
@@ -121,25 +145,47 @@ public class Grid {
 		return -1;
 	}
 	
-	private boolean getConnexComponent(int ix, int iy, int color,
-									   ArrayList<Integer[]> connexComponent) {
+	/**
+	 * Find a connex component and say if the component cross the grid
+	 *
+	 * @param ix the abscissa of the point where we start to get the component
+	 * @param iy the ordinates of the point where we start to get the component
+	 * @param color the color of the component
+	 * @param connexComponent the ArrayList where the component is stocked
+	 * @return
+	 * <ul>
+	 * <li> 1: the component reach the left side </li>
+	 * <li> 2: the component reach the right side </li>
+	 * <li> 3: the component reach both sides </li>
+	 * <li> 0: the component don't reach any side </li>
+	 * </ul>
+	 */
+	private int getConnexComponent(int ix, int iy, int color,
+									   ArrayList<int[]> connexComponent) {
 		if (!isVoid(ix, iy) && !isEmpty(ix, iy)
 			&& grid[iy][ix].getColor() == color
 			&& indexInAlOfCoords(connexComponent, new int[] {ix, iy}) < 0) {
-			connexComponent.add(new Integer[] {ix, iy});
+			connexComponent.add(new int[] {ix, iy});
 		} else {
-			return false;
+			return 0;
 		}
-		boolean crosses = false;
+		int crosses = 0;
 		for (int iy2 = iy-1; iy2 <= iy+1; ++iy2) {
 			for (int ix2 = ix-1; ix2 <= ix+1; ++ix2) {
 				if (ix != ix2 || iy != iy2) {
-					crosses = getConnexComponent(ix2, iy2, color, connexComponent)
-						|| crosses;
+					int result = getConnexComponent(ix2, iy2, color, connexComponent);
+					crosses |= result&1; // if it reach left side
+					crosses |= result&2; // if it reach right side
 				}
 			}
 		}
-		return crosses || ix == nCol-1;
+		if (ix == 0) {
+			return crosses | 1;
+		} else if (ix == nCol-1) {
+			return crosses | 2;
+		} else {
+			return crosses;
+		}
 	}
 	
 	public void display(Graphics2D g2d) {
