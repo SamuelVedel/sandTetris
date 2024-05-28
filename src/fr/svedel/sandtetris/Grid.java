@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Grid {
 	private int nRow = 20*Piece.CUBE_N_ROW;
-	private int nCol = 10*Piece.CUBE_N_COL;
+	private int nCol = 12*Piece.CUBE_N_COL;
 	
 	private Play play;
 	
