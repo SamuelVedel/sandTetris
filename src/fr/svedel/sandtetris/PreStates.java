@@ -257,6 +257,9 @@ public enum PreStates {
 		case Grain.YELLOW:
 			displayColor = Color.YELLOW.darker();
 			break;
+		case Grain.PURPLE:
+			displayColor = Color.decode("#710193");
+			break;
 		default:
 			displayColor = Color.GRAY.darker();
 		}
