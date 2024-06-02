@@ -10,9 +10,16 @@ public class Play {
 	private Toolkit toolkit = Toolkit.getDefaultToolkit();
 	private int fps = 60;
 	
+	private static final int START_PHASE = 0;
+	private static final int PLAY_PHASE = 1;
+	private static final int PAUSE_PHASE = 2;
+	private int phase = START_PHASE;
+	
 	private int score = 0;
 	
 	private PlayPainter playP = new PlayPainter(this);
+	
+	private StartMenu startM = new StartMenu();
 	
 	private Grid grid = new Grid(this);
 	private Piece piece;
@@ -67,6 +74,7 @@ public class Play {
 	
 	public Play() {
 		initVf();
+		initStartM();
 		initPlayP();
 		initPiece();
 		run();
@@ -77,6 +85,11 @@ public class Play {
 		vf.addKeyListener(kl);
 		vf.setContentPane(playP);
 		vf.setVisible(true);
+	}
+	
+	private void initStartM() {
+		startM.setActive(true);
+		startM.setFullyOnScreen();
 	}
 	
 	private void initPlayP() {
@@ -113,11 +126,18 @@ public class Play {
 		return nextPiece;
 	}
 	
+	public StartMenu getStartMenu() {
+		return startM;
+	}
+	
 	private void run() {
 		while (true) {
-			grid.update();
-			if (piece.move()) {
-				initPiece();
+			startM.move();
+			if (phase == PLAY_PHASE) {
+				grid.update();
+				if (piece.move()) {
+					initPiece();
+				}
 			}
 			vf.repaint();
 			toolkit.sync();
