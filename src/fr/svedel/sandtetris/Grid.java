@@ -121,7 +121,7 @@ public class Grid {
 			int color = grid[iy][ix].getColor();
 			ArrayList<int[]> connexComponent = new ArrayList<>();
 			int result = getConnexComponent(ix, iy, color, connexComponent);
-			if (result == 3) play.increaseScore(connexComponent.size());
+			if (result == 3) play.increaseScore(/*connexComponent.size()*/1);
 			for (int[] coords: connexComponent) {
 				if (result == 3) grid[coords[1]][coords[0]] = null;
 				int index = indexInAlOfCoords(updatedCoords, coords);
