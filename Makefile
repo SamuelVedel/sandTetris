@@ -19,6 +19,9 @@ build: .done
 run:
 	java -cp $(OUT_DIR) fr.svedel.sandtetris.Main
 
+$(OUT_DIR)/%.class: $(SRC_DIR)/%.java
+	$(JC) $(JCFLAGS) $<
+
 .done: $(SRCS)
 	$(JC) $(JCFLAGS) $?
 	touch .done
