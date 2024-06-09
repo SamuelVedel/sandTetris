@@ -119,6 +119,10 @@ public class Grid {
 			int[] startCoords = updatedCoords.get(0);
 			int ix = startCoords[0];
 			int iy = startCoords[1];
+			if (isEmpty(ix, iy)) {
+				updatedCoords.remove(0);
+				continue;
+			}
 			int color = grid[iy][ix].getColor();
 			ArrayList<int[]> connexComponent = new ArrayList<>();
 			int result = getConnexComponent(ix, iy, color, connexComponent);
