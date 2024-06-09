@@ -57,6 +57,7 @@ public class Grid {
 				int giy = iy+iy2;
 				if (state[iy2][ix2] != null) {
 					grid[giy][gix] = state[iy2][ix2];
+					updatedCoords.add(new int[] {gix, giy});
 				}
 			}
 		}
