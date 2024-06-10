@@ -19,7 +19,7 @@ public class Play {
 	
 	private PlayPainter playP = new PlayPainter(this);
 	
-	private StartMenu startM = new StartMenu();
+	private StartMenu startM = new StartMenu(this);
 	
 	private Grid grid = new Grid(this);
 	private Piece piece;
@@ -90,6 +90,8 @@ public class Play {
 	private void initStartM() {
 		startM.setActive(true);
 		startM.setFullyOnScreen();
+		startM.addMlToAComponent(playP);
+		startM.addMmlToAComponent(playP);
 	}
 	
 	private void initPlayP() {
@@ -130,13 +132,31 @@ public class Play {
 		return startM;
 	}
 	
+	public void start() {
+		phase = PLAY_PHASE;
+		startM.setActive(false);
+		grid.clear();
+	}
+	
+	public void lose() {
+		phase = START_PHASE;
+		startM.setActive(true);
+	}
+	
+	public void quit() {
+		System.exit(0);
+	}
+	
 	private void run() {
 		while (true) {
 			startM.move();
 			if (phase == PLAY_PHASE) {
 				grid.update();
-				if (piece.move()) {
+				int moveResult = piece.move();
+				if (moveResult == Piece.CORRECTLY_POSED) {
 					initPiece();
+				} else if (moveResult == Piece.INCORRECTLY_POSED) {
+					lose();
 				}
 			}
 			vf.repaint();

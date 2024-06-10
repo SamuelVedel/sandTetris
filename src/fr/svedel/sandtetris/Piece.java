@@ -19,6 +19,13 @@ public class Piece {
 	public static final int WIDTH = PIECE_N_COL*Grain.WIDTH;
 	public static final int HEIGHT = PIECE_N_ROW*Grain.HEIGHT;
 	
+	/** Returned by the move fct when the piece has just move */
+	public static final int JUST_MOVED = 0;
+	/** Returned by the move fct when the piece has been correctly posed in the grid*/
+	public static final int CORRECTLY_POSED = 1;
+	/** Returned by the move fct when the piece has been incorrectly posed in the grid*/
+	public static final int INCORRECTLY_POSED = 2;
+	
 	public static final int VY = 2;
 	
 	private Grid grid;
@@ -84,7 +91,7 @@ public class Piece {
 		fallPressed = true;
 	}
 	
-	public boolean move() {
+	public int move() {
 		if (rotatePressed) {
 			int rot = (rotation+1)%states.length;
 			if (isPosOk(rot)) {
@@ -123,10 +130,13 @@ public class Piece {
 		if (isPosOk(ix, iy+1)) {
 			iy += 1;
 		} else {
-			grid.putPiece(this);
-			return true;
+			if (grid.putPiece(this)) {
+				return CORRECTLY_POSED;
+			} else {
+				return INCORRECTLY_POSED;
+			}
 		}
-		return false;
+		return JUST_MOVED;
 	}
 	
 	private boolean isPosOk(int rotation) {
