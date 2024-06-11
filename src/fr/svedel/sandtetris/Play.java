@@ -10,9 +10,9 @@ public class Play {
 	private Toolkit toolkit = Toolkit.getDefaultToolkit();
 	private int fps = 60;
 	
-	private static final int START_PHASE = 0;
-	private static final int PLAY_PHASE = 1;
-	private static final int PAUSE_PHASE = 2;
+	public static final int START_PHASE = 0;
+	public static final int PLAY_PHASE = 1;
+	public static final int PAUSE_PHASE = 2;
 	private int phase = START_PHASE;
 	
 	private int score = 0;
@@ -34,23 +34,23 @@ public class Play {
 					break;
 				case KeyEvent.VK_UP:
 				case KeyEvent.VK_Z:
-					piece.pressRotate();
+					if (piece != null) piece.pressRotate();
 					break;
 				case KeyEvent.VK_Q:
 				case KeyEvent.VK_LEFT:
-					piece.pressLeft();
+					if (piece != null) piece.pressLeft();
 					break;
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
-					piece.pressRight();
+					if (piece != null) piece.pressRight();
 					break;
 				case KeyEvent.VK_S:
 				case KeyEvent.VK_DOWN:
-					piece.pressDown();
+					if (piece != null) piece.pressDown();
 					break;
 				case KeyEvent.VK_ENTER:
 				case KeyEvent.VK_SPACE:
-					piece.pressFall();
+					if (piece != null) piece.pressFall();
 					break;
 				}
 			}
@@ -60,11 +60,17 @@ public class Play {
 				switch (keyCode) {
 				case KeyEvent.VK_Q:
 				case KeyEvent.VK_LEFT:
-					piece.unpressLeft();
+					if (piece != null) piece.unpressLeft();
 					break;
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
-					piece.unpressRight();
+					if (piece != null) piece.unpressRight();
+					break;
+				case KeyEvent.VK_ENTER:
+					if (phase == START_PHASE) start();
+					break;
+				case KeyEvent.VK_ESCAPE:
+					if (phase == START_PHASE) quit();
 					break;
 				}
 			}
@@ -114,6 +120,10 @@ public class Play {
 	
 	public void increaseScore(int points) {
 		score += points;
+	}
+	
+	public int getPhase() {
+		return phase;
 	}
 	
 	public Grid getGrid() {
