@@ -25,6 +25,9 @@ public class Play {
 	private Piece piece;
 	private Piece nextPiece;
 	
+	private boolean startPressed = false;
+	private boolean quitPressed = false;
+	
 	private KeyListener kl = new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				int keyCode = e.getKeyCode();
@@ -49,8 +52,12 @@ public class Play {
 					if (piece != null) piece.pressDown();
 					break;
 				case KeyEvent.VK_ENTER:
+					if (phase == START_PHASE) startPressed = true;
 				case KeyEvent.VK_SPACE:
 					if (piece != null) piece.pressFall();
+					break;
+				case KeyEvent.VK_ESCAPE:
+					if (phase == START_PHASE) quitPressed = true;
 					break;
 				}
 			}
@@ -67,10 +74,16 @@ public class Play {
 					if (piece != null) piece.unpressRight();
 					break;
 				case KeyEvent.VK_ENTER:
-					if (phase == START_PHASE) start();
+					if (startPressed) {
+						if (phase == START_PHASE) start();
+						startPressed = false;
+					}
 					break;
 				case KeyEvent.VK_ESCAPE:
-					if (phase == START_PHASE) quit();
+					if(quitPressed) {
+						if (phase == START_PHASE) quit();
+						quitPressed = false;
+					}
 					break;
 				}
 			}
