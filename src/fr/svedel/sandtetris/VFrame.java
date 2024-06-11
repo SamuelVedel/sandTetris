@@ -20,7 +20,7 @@ public class VFrame extends JFrame {
 	
 	public VFrame(String name) {
 		this();
-		setName(name);
+		setTitle(name);
 	}
 	
 	public void setVoidCursor() {
