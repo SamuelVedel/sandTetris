@@ -105,7 +105,7 @@ public class Play {
 		int iColor = rand.nextInt(Grain.NUM_COLORS-1);
 		if (rand.nextInt(50) == 0) iColor = Grain.GRAY;
 		nextPiece = new Piece(PreStates.values()[iPStates], iColor, grid);
-		if (piece == null) initPiece();
+		//if (piece == null) initPiece();
 	}
 	
 	public int getScore() {
@@ -135,6 +135,7 @@ public class Play {
 	public void start() {
 		phase = PLAY_PHASE;
 		startM.setActive(false);
+		initPiece();
 		grid.clear();
 	}
 	
