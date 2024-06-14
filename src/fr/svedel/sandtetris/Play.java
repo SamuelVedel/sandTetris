@@ -20,6 +20,7 @@ public class Play {
 	private PlayPainter playP = new PlayPainter(this);
 	
 	private StartMenu startM = new StartMenu(this);
+	private PauseMenu pauseM = new PauseMenu(this);
 	
 	private Grid grid = new Grid(this);
 	private Piece piece;
@@ -37,24 +38,29 @@ public class Play {
 					break;
 				case KeyEvent.VK_UP:
 				case KeyEvent.VK_Z:
-					if (piece != null) piece.pressRotate();
+					if (piece != null
+						&& phase == PLAY_PHASE) piece.pressRotate();
 					break;
 				case KeyEvent.VK_Q:
 				case KeyEvent.VK_LEFT:
-					if (piece != null) piece.pressLeft();
+					if (piece != null
+						&& phase == PLAY_PHASE) piece.pressLeft();
 					break;
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
-					if (piece != null) piece.pressRight();
+					if (piece != null
+						&& phase == PLAY_PHASE) piece.pressRight();
 					break;
 				case KeyEvent.VK_S:
 				case KeyEvent.VK_DOWN:
-					if (piece != null) piece.pressDown();
+					if (piece != null
+						&& phase == PLAY_PHASE) piece.pressDown();
 					break;
 				case KeyEvent.VK_ENTER:
 					if (phase == START_PHASE) startPressed = true;
 				case KeyEvent.VK_SPACE:
-					if (piece != null) piece.pressFall();
+					if (piece != null
+						&& phase == PLAY_PHASE) piece.pressFall();
 					break;
 				case KeyEvent.VK_ESCAPE:
 					if (phase == START_PHASE) quitPressed = true;
@@ -74,12 +80,15 @@ public class Play {
 					if (piece != null) piece.unpressRight();
 					break;
 				case KeyEvent.VK_ENTER:
+					if (phase == PAUSE_PHASE) restart();
 					if (startPressed) {
 						if (phase == START_PHASE) start();
 						startPressed = false;
 					}
 					break;
 				case KeyEvent.VK_ESCAPE:
+					if (phase == PLAY_PHASE) pause();
+					else if (phase == PAUSE_PHASE) restart();
 					if(quitPressed) {
 						if (phase == START_PHASE) quit();
 						quitPressed = false;
@@ -94,6 +103,7 @@ public class Play {
 	public Play() {
 		initVf();
 		initStartM();
+		initPauseM();
 		initPlayP();
 		initPiece();
 		run();
@@ -111,6 +121,11 @@ public class Play {
 		startM.setFullyOnScreen();
 		startM.addMlToAComponent(playP);
 		startM.addMmlToAComponent(playP);
+	}
+	
+	private void initPauseM() {
+		pauseM.addMlToAComponent(playP);
+		pauseM.addMmlToAComponent(playP);
 	}
 	
 	private void initPlayP() {
@@ -155,11 +170,25 @@ public class Play {
 		return startM;
 	}
 	
+	public PauseMenu getPauseMenu() {
+		return pauseM;
+	}
+	
 	public void start() {
 		phase = PLAY_PHASE;
 		startM.setActive(false);
 		initPiece();
 		grid.clear();
+	}
+	
+	public void pause() {
+		phase = PAUSE_PHASE;
+		pauseM.setActive(true);
+	}
+	
+	public void restart() {
+		phase = PLAY_PHASE;
+		pauseM.setActive(false);
 	}
 	
 	public void lose() {
@@ -174,6 +203,7 @@ public class Play {
 	private void run() {
 		while (true) {
 			startM.move();
+			pauseM.move();
 			if (phase == PLAY_PHASE) {
 				grid.update();
 				int moveResult = piece.move();
