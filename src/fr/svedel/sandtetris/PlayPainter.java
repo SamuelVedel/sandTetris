@@ -127,5 +127,9 @@ public class PlayPainter extends JPanel{
 		
 		g2d.drawImage(gridImg, 0, 0,
 					  getWidth(), getHeight(), null);
+		
+		StartMenu startM = play.getStartMenu();
+		startM.adjust(getWidth(), getHeight());
+		startM.display(g2d);
 	}
 }

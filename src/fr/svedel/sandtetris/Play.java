@@ -10,13 +10,23 @@ public class Play {
 	private Toolkit toolkit = Toolkit.getDefaultToolkit();
 	private int fps = 60;
 	
+	public static final int START_PHASE = 0;
+	public static final int PLAY_PHASE = 1;
+	public static final int PAUSE_PHASE = 2;
+	private int phase = START_PHASE;
+	
 	private int score = 0;
 	
 	private PlayPainter playP = new PlayPainter(this);
 	
+	private StartMenu startM = new StartMenu(this);
+	
 	private Grid grid = new Grid(this);
 	private Piece piece;
 	private Piece nextPiece;
+	
+	private boolean startPressed = false;
+	private boolean quitPressed = false;
 	
 	private KeyListener kl = new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -27,23 +37,27 @@ public class Play {
 					break;
 				case KeyEvent.VK_UP:
 				case KeyEvent.VK_Z:
-					piece.pressRotate();
+					if (piece != null) piece.pressRotate();
 					break;
 				case KeyEvent.VK_Q:
 				case KeyEvent.VK_LEFT:
-					piece.pressLeft();
+					if (piece != null) piece.pressLeft();
 					break;
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
-					piece.pressRight();
+					if (piece != null) piece.pressRight();
 					break;
 				case KeyEvent.VK_S:
 				case KeyEvent.VK_DOWN:
-					piece.pressDown();
+					if (piece != null) piece.pressDown();
 					break;
 				case KeyEvent.VK_ENTER:
+					if (phase == START_PHASE) startPressed = true;
 				case KeyEvent.VK_SPACE:
-					piece.pressFall();
+					if (piece != null) piece.pressFall();
+					break;
+				case KeyEvent.VK_ESCAPE:
+					if (phase == START_PHASE) quitPressed = true;
 					break;
 				}
 			}
@@ -53,11 +67,23 @@ public class Play {
 				switch (keyCode) {
 				case KeyEvent.VK_Q:
 				case KeyEvent.VK_LEFT:
-					piece.unpressLeft();
+					if (piece != null) piece.unpressLeft();
 					break;
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
-					piece.unpressRight();
+					if (piece != null) piece.unpressRight();
+					break;
+				case KeyEvent.VK_ENTER:
+					if (startPressed) {
+						if (phase == START_PHASE) start();
+						startPressed = false;
+					}
+					break;
+				case KeyEvent.VK_ESCAPE:
+					if(quitPressed) {
+						if (phase == START_PHASE) quit();
+						quitPressed = false;
+					}
 					break;
 				}
 			}
@@ -67,6 +93,7 @@ public class Play {
 	
 	public Play() {
 		initVf();
+		initStartM();
 		initPlayP();
 		initPiece();
 		run();
@@ -77,6 +104,13 @@ public class Play {
 		vf.addKeyListener(kl);
 		vf.setContentPane(playP);
 		vf.setVisible(true);
+	}
+	
+	private void initStartM() {
+		startM.setActive(true);
+		startM.setFullyOnScreen();
+		startM.addMlToAComponent(playP);
+		startM.addMmlToAComponent(playP);
 	}
 	
 	private void initPlayP() {
@@ -90,7 +124,7 @@ public class Play {
 		int iColor = rand.nextInt(Grain.NUM_COLORS-1);
 		if (rand.nextInt(50) == 0) iColor = Grain.GRAY;
 		nextPiece = new Piece(PreStates.values()[iPStates], iColor, grid);
-		if (piece == null) initPiece();
+		//if (piece == null) initPiece();
 	}
 	
 	public int getScore() {
@@ -99,6 +133,10 @@ public class Play {
 	
 	public void increaseScore(int points) {
 		score += points;
+	}
+	
+	public int getPhase() {
+		return phase;
 	}
 	
 	public Grid getGrid() {
@@ -113,11 +151,37 @@ public class Play {
 		return nextPiece;
 	}
 	
+	public StartMenu getStartMenu() {
+		return startM;
+	}
+	
+	public void start() {
+		phase = PLAY_PHASE;
+		startM.setActive(false);
+		initPiece();
+		grid.clear();
+	}
+	
+	public void lose() {
+		phase = START_PHASE;
+		startM.setActive(true);
+	}
+	
+	public void quit() {
+		System.exit(0);
+	}
+	
 	private void run() {
 		while (true) {
-			grid.update();
-			if (piece.move()) {
-				initPiece();
+			startM.move();
+			if (phase == PLAY_PHASE) {
+				grid.update();
+				int moveResult = piece.move();
+				if (moveResult == Piece.CORRECTLY_POSED) {
+					initPiece();
+				} else if (moveResult == Piece.INCORRECTLY_POSED) {
+					lose();
+				}
 			}
 			vf.repaint();
 			toolkit.sync();

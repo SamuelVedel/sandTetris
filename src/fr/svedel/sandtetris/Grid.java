@@ -47,7 +47,14 @@ public class Grid {
 		return grid[iy][ix] == null;
 	}
 	
-	public void putPiece(Piece piece) {
+	/**
+	 * Put a piece in the Grid
+	 *
+	 * @param piece The piece we want to put
+	 * @return false if the piece don't fit in the grid,
+	 * and true otherwise
+	 */
+	public boolean putPiece(Piece piece) {
 		Grain[][] state = piece.getState();
 		int ix = piece.getIx();
 		int iy = piece.getIy();
@@ -56,11 +63,13 @@ public class Grid {
 				int gix = ix+ix2;
 				int giy = iy+iy2;
 				if (state[iy2][ix2] != null) {
+					if (isVoid(gix, giy)) return false;
 					grid[giy][gix] = state[iy2][ix2];
 					updatedCoords.add(new int[] {gix, giy});
 				}
 			}
 		}
+		return true;
 	}
 	
 	private int[] getRandomIxArray() {
@@ -190,6 +199,14 @@ public class Grid {
 			return crosses | 2;
 		} else {
 			return crosses;
+		}
+	}
+	
+	public void clear() {
+		for (int iy = 0; iy < grid.length; ++iy) {
+			for (int ix = 0; ix < grid[iy].length; ++ix) {
+				grid[iy][ix] = null;
+			}
 		}
 	}
 	
