@@ -26,8 +26,8 @@ public class Play {
 	private Piece piece;
 	private Piece nextPiece;
 	
-	private boolean startPressed = false;
-	private boolean quitPressed = false;
+	private boolean enterPressedInPlay = false;
+	private boolean escPressedInPlay = false;
 	
 	private KeyListener kl = new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -57,13 +57,13 @@ public class Play {
 						&& phase == PLAY_PHASE) piece.pressDown();
 					break;
 				case KeyEvent.VK_ENTER:
-					if (phase == START_PHASE) startPressed = true;
+					if (phase == PLAY_PHASE) enterPressedInPlay = true;
 				case KeyEvent.VK_SPACE:
 					if (piece != null
 						&& phase == PLAY_PHASE) piece.pressFall();
 					break;
 				case KeyEvent.VK_ESCAPE:
-					if (phase == START_PHASE) quitPressed = true;
+					if (phase == PLAY_PHASE) escPressedInPlay = true;
 					break;
 				}
 			}
@@ -81,18 +81,18 @@ public class Play {
 					break;
 				case KeyEvent.VK_ENTER:
 					if (phase == PAUSE_PHASE) restart();
-					if (startPressed) {
-						if (phase == START_PHASE) start();
-						startPressed = false;
+					else if (!enterPressedInPlay && phase == START_PHASE) {
+						start();
 					}
+					enterPressedInPlay = false;
 					break;
 				case KeyEvent.VK_ESCAPE:
 					if (phase == PLAY_PHASE) pause();
 					else if (phase == PAUSE_PHASE) restart();
-					if(quitPressed) {
-						if (phase == START_PHASE) quit();
-						quitPressed = false;
+					else if(!escPressedInPlay && phase == START_PHASE) {
+						quit();
 					}
+					escPressedInPlay = false;
 					break;
 				}
 			}
