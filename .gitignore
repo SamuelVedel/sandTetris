@@ -2,3 +2,4 @@
 .done
 bin/
 *.class
+*.jar
