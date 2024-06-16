@@ -18,6 +18,8 @@ all: build run
 
 build: .done
 
+jar: sand_tetris.jar
+
 run:
 	java -cp $(OUT_DIR):$(VC_PATH) fr.svedel.sandtetris.Main
 
@@ -30,6 +32,9 @@ $(OUT_DIR)/%.class: $(SRC_DIR)/%.java
 .done: $(SRCS)
 	$(JC) $(JCFLAGS) $?
 	touch .done
+
+sand_tetris.jar: .done
+	jar -cfe $@ fr.svedel.sandtetris.Main -C $(OUT_DIR) . -C $(VC_PATH) .
 
 clean:
 	rm -rf $(OUT_DIR)
