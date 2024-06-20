@@ -18,6 +18,12 @@ public class Grain {
 	public static final int GRAY = 4;
 	public static final int NUM_COLORS = 5;
 	
+	private static final int NO_DIRECTION = 0;
+	private static final int LEFT_DIRECTION = -1;
+	private static final int RIGHT_DIRECTION = 1;
+	
+	private int direction = NO_DIRECTION;
+	
 	private int color;
 	private Color displayColor;
 	
@@ -47,6 +53,30 @@ public class Grain {
 				return new int[] {ix-1, iy+1};
 			} else if (!grid.isVoid(ix+1, iy+1) && grid.isEmpty(ix+1, iy+1)) {
 				return new int[] {ix+1, iy+1};
+			}
+			// this is for fun and water simulation
+			else if (color == BLUE) {
+				if (!grid.isVoid(ix-1, iy) && !grid.isVoid(ix+1, iy)
+					&& grid.isEmpty(ix-1, iy) && grid.isEmpty(ix+1, iy)) {
+					Random rand = new Random();
+					int newX = ix+direction;
+					if (direction == NO_DIRECTION) {
+						if (rand.nextBoolean()) {
+							newX = ix+1;
+							direction = RIGHT_DIRECTION;
+						} else {
+							newX = ix-1;
+							direction = LEFT_DIRECTION;
+						}
+					}
+					return new int[] {newX, iy};
+				} else if (!grid.isVoid(ix-1, iy) && grid.isEmpty(ix-1, iy)) {
+					direction = LEFT_DIRECTION;
+					return new int[] {ix-1, iy};
+				} else if (!grid.isVoid(ix+1, iy) && grid.isEmpty(ix+1, iy)) {
+					direction = RIGHT_DIRECTION;
+					return new int[] {ix+1, iy};
+				}
 			}
 		}
 		return new int[] {ix, iy};
