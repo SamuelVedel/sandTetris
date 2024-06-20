@@ -136,8 +136,9 @@ public class Play {
 		Random rand = new Random();
 		piece = nextPiece;
 		int iPStates = rand.nextInt(PreStates.values().length);
-		int iColor = rand.nextInt(Grain.NUM_COLORS-1);
+		int iColor = rand.nextInt(Grain.NUM_COLORS-Grain.NUM_CURSED_COLORS);
 		if (rand.nextInt(50) == 0) iColor = Grain.GRAY;
+		else if (rand.nextInt(10) == 0) iColor = Grain.BLUE;
 		nextPiece = new Piece(PreStates.values()[iPStates], iColor, grid);
 		//if (piece == null) initPiece();
 	}

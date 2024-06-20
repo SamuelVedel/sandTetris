@@ -10,13 +10,14 @@ public class Grain {
 	
 	private Grid grid;
 	
-	public static final int BLUE = 0;
-	public static final int RED = 1;
+	public static final int RED = 0;
 	public static final int GREEN = -1;
-	public static final int YELLOW = 2;
-	public static final int PURPLE = 3;
+	public static final int YELLOW = 1;
+	public static final int PURPLE = 2;
+	public static final int BLUE = 3;
 	public static final int GRAY = 4;
 	public static final int NUM_COLORS = 5;
+	public static final int NUM_CURSED_COLORS = 2;
 	
 	private static final int NO_DIRECTION = 0;
 	private static final int LEFT_DIRECTION = -1;
