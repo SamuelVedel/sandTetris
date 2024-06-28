@@ -47,8 +47,8 @@ public class Piece {
 		iy = -PIECE_N_ROW-CUBE_N_ROW;
 	}
 	
-	public Piece(PreStates preStates, int color, Grid grid) {
-		this(preStates.generateStates(color, grid), grid);
+	public Piece(PreStates preStates, int color, int rules, Grid grid) {
+		this(preStates.generateStates(color, rules, grid), grid);
 	}
 	
 	public int getIx() {

@@ -22,6 +22,13 @@ public class Play {
 	private StartMenu startM = new StartMenu(this);
 	private PauseMenu pauseM = new PauseMenu(this);
 	
+	private int rules = 0
+		+PreStates.GRAY_IS_STONE
+		//+PreStates.BLUE_IS_WATER
+		;
+	// Gray is not include
+	private int numColors = 4;
+	
 	private Grid grid = new Grid(this);
 	private Piece piece;
 	private Piece nextPiece;
@@ -136,10 +143,21 @@ public class Play {
 		Random rand = new Random();
 		piece = nextPiece;
 		int iPStates = rand.nextInt(PreStates.values().length);
-		int iColor = rand.nextInt(Grain.NUM_COLORS-Grain.NUM_CURSED_COLORS);
-		if (rand.nextInt(50) == 0) iColor = Grain.GRAY;
-		else if (rand.nextInt(10) == 0) iColor = Grain.BLUE;
-		nextPiece = new Piece(PreStates.values()[iPStates], iColor, grid);
+		
+		int startColor = 1;
+		int endColor = startColor+numColors;
+		if ((rules&PreStates.BLUE_IS_WATER) != 0) ++startColor;
+		int iColor = rand.nextInt(endColor-startColor)+startColor;
+		
+		// for water
+		if ((rules&PreStates.GRAY_IS_STONE) != 0
+			&& rand.nextInt(50) == 0) {
+			iColor = Grain.GRAY;
+		} else if ((rules&PreStates.BLUE_IS_WATER) != 0
+				   &&rand.nextInt(20) == 0) {
+			iColor = Grain.BLUE;
+		}
+		nextPiece = new Piece(PreStates.values()[iPStates], iColor, rules, grid);
 		//if (piece == null) initPiece();
 	}
 	

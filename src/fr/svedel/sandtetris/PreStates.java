@@ -199,6 +199,10 @@ public enum PreStates {
 	private static final int NORMAL = 3;
 	private static final int NUM_MOTIF = 3;
 	
+	// peuvent être ajouté pour combiné les règles
+	public static final int GRAY_IS_STONE = 1<<0;
+	public static final int BLUE_IS_WATER = 1<<1;
+	
 	private int[][][] pstates;
 	
 	PreStates(int[][][] pstates) {
@@ -239,15 +243,19 @@ public enum PreStates {
 		}
 	}
 	
-	public Grain[][][] generateStates(int color, Grid grid) {
+	public Grain[][][] generateStates(int color, int rules, Grid grid) {
 		Random rand = new Random();
 		int motif = rand.nextInt(NUM_MOTIF);
+		int type = Grain.SAND_TYPE;
 		
 		Color displayColor;
 		switch (color) {
 		case Grain.BLUE:
 			//displayColor = Color.BLUE.darker();
 			displayColor = new Color(93, 173, 226);
+			if ((rules&BLUE_IS_WATER) != 0) {
+				type = Grain.WATER_TYPE;
+			}
 			break;
 		case Grain.RED:
 			//displayColor = Color.RED.darker();
@@ -266,6 +274,9 @@ public enum PreStates {
 			break;
 		default:
 			displayColor = Color.GRAY.darker();
+			if ((rules&GRAY_IS_STONE) != 0) {
+				type = Grain.STONE_TYPE;
+			}
 		}
 		
 		Grain[][][] states = new Grain[4][Piece.PIECE_N_ROW][Piece.PIECE_N_COL];
@@ -277,7 +288,7 @@ public enum PreStates {
 					if (pstates[ir][iy2][ix2] == 1) {
 						Color thisDisplayColor =
 							generateDispalyColor(ix, iy, displayColor, motif);
-						states[ir][iy][ix] = new Grain(color, thisDisplayColor, grid);
+						states[ir][iy][ix] = new Grain(type, color, thisDisplayColor, grid);
 					} else {
 						states[ir][iy][ix] = null;
 					}
