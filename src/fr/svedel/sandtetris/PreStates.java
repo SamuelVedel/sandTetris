@@ -253,7 +253,7 @@ public enum PreStates {
 		case Grain.BLUE:
 			//displayColor = Color.BLUE.darker();
 			displayColor = new Color(93, 173, 226);
-			if ((rules&BLUE_IS_WATER) != 0) {
+			if ((rules&GameSettings.BLUE_IS_WATER) != 0) {
 				type = Grain.WATER_TYPE;
 			}
 			break;
@@ -274,7 +274,7 @@ public enum PreStates {
 			break;
 		default:
 			displayColor = Color.GRAY.darker();
-			if ((rules&GRAY_IS_STONE) != 0) {
+			if ((rules&GameSettings.GRAY_IS_STONE) != 0) {
 				type = Grain.STONE_TYPE;
 			}
 		}
