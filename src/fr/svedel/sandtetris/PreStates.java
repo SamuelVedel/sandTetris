@@ -243,7 +243,7 @@ public enum PreStates {
 		}
 	}
 	
-	public Grain[][][] generateStates(int color, int rules, Grid grid) {
+	public Grain[][][] generateStates(int color, GameSettings gameset, Grid grid) {
 		Random rand = new Random();
 		int motif = rand.nextInt(NUM_MOTIF);
 		int type = Grain.SAND_TYPE;
@@ -253,7 +253,7 @@ public enum PreStates {
 		case Grain.BLUE:
 			//displayColor = Color.BLUE.darker();
 			displayColor = new Color(93, 173, 226);
-			if ((rules&GameSettings.BLUE_IS_WATER) != 0) {
+			if (gameset.isBlueWater()) {
 				type = Grain.WATER_TYPE;
 			}
 			break;
@@ -274,7 +274,7 @@ public enum PreStates {
 			break;
 		default:
 			displayColor = Color.GRAY.darker();
-			if ((rules&GameSettings.GRAY_IS_STONE) != 0) {
+			if (gameset.isGrayStone()) {
 				type = Grain.STONE_TYPE;
 			}
 		}

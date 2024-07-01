@@ -22,6 +22,8 @@ public class Play {
 	private StartMenu startM = new StartMenu(this);
 	private PauseMenu pauseM = new PauseMenu(this);
 	
+	private GameSettings gameset = new GameSettings();
+	
 	private Grid grid = new Grid(this);
 	private Piece piece;
 	private Piece nextPiece;
@@ -138,19 +140,19 @@ public class Play {
 		int iPStates = rand.nextInt(PreStates.values().length);
 		
 		int startColor = 1;
-		int endColor = startColor+numColors;
-		if ((rules&PreStates.BLUE_IS_WATER) != 0) ++startColor;
+		int endColor = startColor+gameset.getNumColors();
+		if (gameset.isBlueWater()) ++startColor;
 		int iColor = rand.nextInt(endColor-startColor)+startColor;
 		
 		// for water
-		if ((rules&PreStates.GRAY_IS_STONE) != 0
-			&& rand.nextInt(proportionOfStone) == 0) {
+		if (gameset.isGrayStone()
+			&& rand.nextInt(gameset.getProportionOfStone()) == 0) {
 			iColor = Grain.GRAY;
-		} else if ((rules&GameSettings.BLUE_IS_WATER) != 0
-				   &&rand.nextInt(proportionOfWater) == 0) {
+		} else if (gameset.isBlueWater()
+				   && rand.nextInt(gameset.getProportionOfWater()) == 0) {
 			iColor = Grain.BLUE;
 		}
-		nextPiece = new Piece(PreStates.values()[iPStates], iColor, rules, grid);
+		nextPiece = new Piece(PreStates.values()[iPStates], iColor, gameset, grid);
 		//if (piece == null) initPiece();
 	}
 	

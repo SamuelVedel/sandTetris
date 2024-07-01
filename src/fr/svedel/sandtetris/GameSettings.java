@@ -29,7 +29,10 @@ public class GameSettings {
 	}
 	
 	public GameSettings() {
-		this(20, 12, 0, 5, 50, 20);
+		this(20, 12, 0
+			 +GRAY_IS_STONE
+			 //+BLUE_IS_WATER
+			 , Grain.MAX_NUM_COLORS-1, 50, 20);
 	}
 	
 	public int getNRow() {
@@ -78,5 +81,13 @@ public class GameSettings {
 	
 	public void getProportionOfWater(int proportionOfWater) {
 		this.proportionOfWater = proportionOfWater;
+	}
+	
+	public boolean isGrayStone() {
+		return (rules&GRAY_IS_STONE) != 0;
+	}
+	
+	public boolean isBlueWater() {
+		return (rules&BLUE_IS_WATER) != 0;
 	}
 }
