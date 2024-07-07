@@ -20,6 +20,7 @@ public class Play {
 	private PlayPainter playP = new PlayPainter(this);
 	
 	private StartMenu startM = new StartMenu(this);
+	private SettingsMenu settingsM = new SettingsMenu();
 	private PauseMenu pauseM = new PauseMenu(this);
 	
 	private GameSettings gameset = new GameSettings();
@@ -125,6 +126,11 @@ public class Play {
 		startM.addMmlToAComponent(playP);
 	}
 	
+	private void initSettingsM() {
+		settingsM.addMlToAComponent(playP);
+		settingsM.addMmlToAComponent(playP);
+	}
+	
 	private void initPauseM() {
 		pauseM.addMlToAComponent(playP);
 		pauseM.addMmlToAComponent(playP);
@@ -184,6 +190,10 @@ public class Play {
 		return startM;
 	}
 	
+	public SettingsMenu getSettingsMenu() {
+		return settingsM;
+	}
+	
 	public PauseMenu getPauseMenu() {
 		return pauseM;
 	}
@@ -193,6 +203,20 @@ public class Play {
 		startM.setActive(false);
 		initPiece();
 		grid.clear();
+	}
+	
+	public void openSettings() {
+		startM.setActive(false);
+		startM.setFullyOffScreen();
+		settingsM.setActive(true);
+		settingsM.setFullyOnScreen();
+	}
+	
+	public void closeSettings() {
+		settingsM.setActive(false);
+		settingsM.setFullyOffScreen();
+		startM.setActive(true);
+		startM.setFullyOnScreen();
 	}
 	
 	public void pause() {

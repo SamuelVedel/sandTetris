@@ -39,6 +39,11 @@ public abstract class Menu extends VPanel {
 		updateY();
 	}
 	
+	public void setFullyOffScreen() {
+		percentOnScreen = 0;
+		updateY();
+	}
+	
 	public void move() {
 		percentOnScreen += v;
 		if (isActive()) {
@@ -66,8 +71,8 @@ public abstract class Menu extends VPanel {
 		// background
 		//int currentX = getX().getCurrentValue();
 		int currentY = getY().getCurrentValue();
-		int currentWRef = getWidthReference().getCurrentValue();
-		int currentHRef = getHeightReference().getCurrentValue();
+		int currentWRef = getReferenceWidth().getCurrentValue();
+		int currentHRef = getReferenceHeight().getCurrentValue();
 		g2d.setColor(new Color(255, 255, 255, 50));
 		g2d.fillRect(0, currentY, currentWRef, currentHRef);
 		

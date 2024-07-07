@@ -132,6 +132,10 @@ public class PlayPainter extends JPanel{
 		startM.adjust(getWidth(), getHeight());
 		startM.display(g2d);
 		
+		SettingsMenu settM = play.getSettingsMenu();
+		settM.adjust(getWidth(), getHeight());
+		settM.display(g2d);
+		
 		PauseMenu pauseM = play.getPauseMenu();
 		pauseM.adjust(getWidth(), getHeight());
 		pauseM.display(g2d);

@@ -1,6 +1,8 @@
 package fr.svedel.sandtetris;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 import fr.svedel.vcomponent.VButton;
 import fr.svedel.vcomponent.VLabel;
@@ -29,10 +31,29 @@ public class SettingsMenu extends Menu {
 	}
 	
 	private void initVComponents() {
-		initDimPanel();
+		// this image is used to get a graphics2D that is used
+		// to set the labels' dimensions
+		BufferedImage bi = new BufferedImage(this.getWidth().getValue(),
+											 this.getHeight().getValue(),
+											 BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2dbi = bi.createGraphics();
+		initDimPanel(g2dbi);
+		g2dbi.dispose();
 	}
 	
-	private void initDimPanel() {
+	private void initDimPanel(Graphics2D g2d) {
+		int refWidth = getReferenceWidth().getValue();
+		int refHeight = getReferenceHeight().getValue();
+		add(dimPanel);
+		/*dimPanel.*/add(nrowLabel);
+		/*dimPanel.*/add(nrowWriter);
+		/*dimPanel.*/add(ncolLabel);
+		/*dimPanel.*/add(ncolWriter);
 		
+		// to set the labels' dimensions
+		nrowLabel.display(g2d);
+		ncolLabel.display(g2d);
+		
+		dimPanel.getX().setValue(refWidth/2-getWidth().getValue()/2);
 	}
 }

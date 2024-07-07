@@ -175,7 +175,7 @@ public class Grid {
 	 * </ul>
 	 */
 	private int getConnexComponent(int ix, int iy, int color,
-									   ArrayList<int[]> connexComponent) {
+								   ArrayList<int[]> connexComponent) {
 		if (!isVoid(ix, iy) && !isEmpty(ix, iy)
 			&& grid[iy][ix].getColor() == color
 			&& indexInAlOfCoords(connexComponent, new int[] {ix, iy}) < 0) {
