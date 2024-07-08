@@ -106,6 +106,7 @@ public class Play {
 	public Play() {
 		initVf();
 		initStartM();
+		initSettingsM();
 		initPauseM();
 		initPlayP();
 		initPiece();
@@ -129,6 +130,7 @@ public class Play {
 	private void initSettingsM() {
 		settingsM.addMlToAComponent(playP);
 		settingsM.addMmlToAComponent(playP);
+		settingsM.addKlToAComponent(vf);
 	}
 	
 	private void initPauseM() {
