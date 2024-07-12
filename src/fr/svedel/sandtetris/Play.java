@@ -212,6 +212,7 @@ public class Play {
 		startM.setFullyOffScreen();
 		settingsM.setActive(true);
 		settingsM.setFullyOnScreen();
+		settingsM.setUsable(true);
 	}
 	
 	public void closeSettings() {
@@ -219,6 +220,7 @@ public class Play {
 		settingsM.setFullyOffScreen();
 		startM.setActive(true);
 		startM.setFullyOnScreen();
+		settingsM.setUsable(false);
 	}
 	
 	public void pause() {
