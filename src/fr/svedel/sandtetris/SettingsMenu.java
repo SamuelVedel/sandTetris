@@ -2,18 +2,23 @@ package fr.svedel.sandtetris;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.RenderingHints;
 
+import fr.svedel.vcomponent.VActionListener;
 import fr.svedel.vcomponent.VAdjustInt;
 import fr.svedel.vcomponent.VButton;
+import fr.svedel.vcomponent.VComponent;
 import fr.svedel.vcomponent.VLabel;
 import fr.svedel.vcomponent.VNumberWriter;
 import fr.svedel.vcomponent.VPanel;
 import fr.svedel.vcomponent.VSwitch;
 
 public class SettingsMenu extends Menu {
+	
+	private Play play;
 	
 	private static final int COMPONENT_GAP = 3;
 	private static final int BORDER_GAP = 10;
@@ -46,20 +51,28 @@ public class SettingsMenu extends Menu {
 	private SettingsPanel stonePanel = new SettingsPanel();
 	private VLabel stoneLabel = new VLabel("Stone");
 	private VSwitch stoneSwitch = new VSwitch(SWITCH_HEIGHT);
-	private VLabel stonePerLabel = new VLabel("%");
+	private VLabel stonePerLabel = new VLabel("1/");
 	private VNumberWriter stoneWriter = new VNumberWriter(WRITER_HEIGHT);
 	
 	private SettingsPanel waterPanel = new SettingsPanel();
 	private VLabel waterLabel = new VLabel("Water");
 	private VSwitch waterSwitch = new VSwitch(SWITCH_HEIGHT);
-	private VLabel waterPerLabel = new VLabel("%");
+	private VLabel waterPerLabel = new VLabel("1/");
 	private VNumberWriter waterWriter = new VNumberWriter(WRITER_HEIGHT);
 	
 	private SandButton okButt = new SandButton(BUTTON_WIDTH, BUTTON_HEIGHT, "Ok");
 	private SandButton cancelButt = new SandButton(BUTTON_WIDTH, BUTTON_HEIGHT, "Cancel");
 	
-	public SettingsMenu() {
+	private VActionListener val = new VActionListener() {
+			public void action(VComponent source, MouseEvent e) {
+				if (source == okButt) play.okSettings();
+				else play.cancelSettings();
+			}
+		};
+	
+	public SettingsMenu(Play play) {
 		super(800, 500);
+		this.play = play;
 		initVComponents();
 	}
 	
@@ -265,6 +278,7 @@ public class SettingsMenu extends Menu {
 		add(okButt);
 		add(cancelButt);
 		
+		okButt.addVActionListener(val);
 		okButt.getFontSize().setValue(FONT_SIZE);
 		okButt.getBorderWidth().setValue(1);
 		okButt.getX().setValue(refWidth/2-PANEL_GAP/2
@@ -273,6 +287,7 @@ public class SettingsMenu extends Menu {
 							   +waterPanel.getHeight().getValue()
 							   +PANEL_GAP);
 		
+		cancelButt.addVActionListener(val);
 		cancelButt.getBorderWidth().setValue(1);
 		cancelButt.getFontSize().setValue(FONT_SIZE);
 		cancelButt.getX().setValue(refWidth/2+PANEL_GAP/2);
@@ -292,6 +307,29 @@ public class SettingsMenu extends Menu {
 		waterSwitch.setUsable(usable);
 		okButt.setUsable(usable);
 		cancelButt.setUsable(usable);
+	}
+	
+	public void readSettings(GameSettings gs) {
+		nrowWriter.setNumber(gs.getNRow());
+		ncolWriter.setNumber(gs.getNCol());
+		ncolorsWriter.setNumber(gs.getNumColors());
+		stoneSwitch.setState(gs.isGrayStone());
+		stoneWriter.setNumber(gs.getProportionOfStone());
+		waterSwitch.setState(gs.isBlueWater());
+		waterWriter.setNumber(gs.getProportionOfWater());
+	}
+	
+	public void writeSettings(GameSettings gs) {
+		gs.setNRow(nrowWriter.getNumber());
+		gs.setNCol(ncolWriter.getNumber());
+		gs.setNumColors(ncolorsWriter.getNumber());
+		gs.setProportionOfStone(stoneWriter.getNumber());
+		gs.setProportionOfWater(waterWriter.getNumber());
+		
+		int rules = 0;
+		if (stoneSwitch.getState()) rules += GameSettings.GRAY_IS_STONE;
+		if (waterSwitch.getState()) rules += GameSettings.BLUE_IS_WATER;
+		gs.setRules(rules);
 	}
 	
 	private class SettingsPanel extends VPanel {

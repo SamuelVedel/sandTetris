@@ -13,6 +13,7 @@ public class Play {
 	public static final int START_PHASE = 0;
 	public static final int PLAY_PHASE = 1;
 	public static final int PAUSE_PHASE = 2;
+	public static final int SETTINGS_PHASE = 3;
 	private int phase = START_PHASE;
 	
 	private int score = 0;
@@ -20,7 +21,7 @@ public class Play {
 	private PlayPainter playP = new PlayPainter(this);
 	
 	private StartMenu startM = new StartMenu(this);
-	private SettingsMenu settingsM = new SettingsMenu();
+	private SettingsMenu settingsM = new SettingsMenu(this);
 	private PauseMenu pauseM = new PauseMenu(this);
 	
 	private GameSettings gameset = new GameSettings();
@@ -86,7 +87,7 @@ public class Play {
 					if (phase == PAUSE_PHASE) restart();
 					else if (!enterPressedInPlay && phase == START_PHASE) {
 						start();
-					}
+					} else if (phase == SETTINGS_PHASE) okSettings();
 					enterPressedInPlay = false;
 					break;
 				case KeyEvent.VK_ESCAPE:
@@ -94,7 +95,7 @@ public class Play {
 					else if (phase == PAUSE_PHASE) restart();
 					else if(!escPressedInPlay && phase == START_PHASE) {
 						quit();
-					}
+					} else if (phase == SETTINGS_PHASE) cancelSettings();
 					escPressedInPlay = false;
 					break;
 				}
@@ -212,7 +213,9 @@ public class Play {
 		startM.setFullyOffScreen();
 		settingsM.setActive(true);
 		settingsM.setFullyOnScreen();
+		settingsM.readSettings(gameset);
 		settingsM.setUsable(true);
+		phase = SETTINGS_PHASE;
 	}
 	
 	public void closeSettings() {
@@ -221,6 +224,17 @@ public class Play {
 		startM.setActive(true);
 		startM.setFullyOnScreen();
 		settingsM.setUsable(false);
+		phase = START_PHASE;
+	}
+	
+	public void okSettings() {
+		closeSettings();
+		settingsM.writeSettings(gameset);
+		grid.resize(gameset.getNRow(), gameset.getNCol());
+	}
+	
+	public void cancelSettings() {
+		closeSettings();
 	}
 	
 	public void pause() {

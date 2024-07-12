@@ -71,7 +71,7 @@ public class GameSettings {
 		return proportionOfStone;
 	}
 	
-	public void getProportionOfStone(int proportionOfStone) {
+	public void setProportionOfStone(int proportionOfStone) {
 		this.proportionOfStone = proportionOfStone;
 	}
 	
@@ -79,7 +79,7 @@ public class GameSettings {
 		return proportionOfWater;
 	}
 	
-	public void getProportionOfWater(int proportionOfWater) {
+	public void setProportionOfWater(int proportionOfWater) {
 		this.proportionOfWater = proportionOfWater;
 	}
 	

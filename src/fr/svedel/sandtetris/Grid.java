@@ -35,6 +35,12 @@ public class Grid {
 		return getNRow()*Grain.HEIGHT;
 	}
 	
+	public void resize(int nRow, int nCol) {
+		this.nRow = nRow*Piece.CUBE_N_ROW;
+		this.nCol = nCol*Piece.CUBE_N_COL;
+		grid = new Grain[this.nRow][this.nCol];
+	}
+	
 	public void addGrain(Grain grain, int ix, int iy) {
 		grid[iy][ix] = grain;
 	}
